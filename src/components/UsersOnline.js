@@ -28,7 +28,7 @@ const UsersOnline = () => {
                 <TbUser className="h-4 text-green-300" />
             </div>
             <div className="text-sm font-medium mr-1">
-                {usersOnline} {usersOnline === 1 ? "User Online" : "Users Online"}
+                {usersOnline}
             </div>
             <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 bg-white text-sm text-black px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                 Users Active
