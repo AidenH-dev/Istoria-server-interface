@@ -45,7 +45,7 @@ const SystemStorage = () => {
     const progressBar =
         "[" +
         "=".repeat(filledBars) +
-        "-".repeat(progressBarLength - filledBars) +
+        " ".repeat(progressBarLength - filledBars) +
         "]";
 
     return (
