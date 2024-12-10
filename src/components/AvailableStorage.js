@@ -41,9 +41,12 @@ const SystemStorage = () => {
         : 0;
 
     const progressBarLength = 10; // Fixed length for the progress bar
-    const greenBarsCount = Math.round((percentageUsed / 100) * progressBarLength);
-    const emptyBarsCount = progressBarLength - greenBarsCount;
-    const progressBar = "[" + "=".repeat(greenBarsCount) + " ".repeat(emptyBarsCount) + "]";
+    const filledBars = Math.round((percentageUsed / 100) * progressBarLength);
+    const progressBar =
+        "[" +
+        "=".repeat(filledBars) +
+        "-".repeat(progressBarLength - filledBars) +
+        "]";
 
     return (
         <div className="relative group cursor-default my-4 flex items-center text-white px-1 pr-1 py-0.5 rounded-md border border-[#b7bdc8] w-fit">
