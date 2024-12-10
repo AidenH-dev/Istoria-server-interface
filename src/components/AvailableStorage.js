@@ -37,15 +37,12 @@ const SystemStorage = () => {
 
     // Prevent invalid values
     const percentageUsed = totalStorage > 0
-        ? Math.min(Math.max(Math.round((usedStorage / totalStorage) * 100), 0), 100)
+        ? Math.min(Math.max((usedStorage / totalStorage) * 100, 0), 100)
         : 0;
 
-    const progressBarLength = 20; // Length of the ASCII progress bar
-    const greenBarsCount = Math.max(
-        Math.round((percentageUsed / 100) * progressBarLength),
-        0
-    );
-    const emptyBarsCount = Math.max(progressBarLength - greenBarsCount, 0);
+    const progressBarLength = 10; // Fixed length for the progress bar
+    const greenBarsCount = Math.round((percentageUsed / 100) * progressBarLength);
+    const emptyBarsCount = progressBarLength - greenBarsCount;
     const progressBar = "[" + "=".repeat(greenBarsCount) + " ".repeat(emptyBarsCount) + "]";
 
     return (
