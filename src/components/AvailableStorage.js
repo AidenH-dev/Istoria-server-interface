@@ -40,7 +40,7 @@ const SystemStorage = () => {
         : 0;
 
     const progressBarLength = 10; // Fixed length for the progress bar
-    const filledBars = Math.floor((percentageUsed / 100) * progressBarLength);
+    const filledBars = Math.max(Math.floor((percentageUsed / 100) * progressBarLength), 1);
     const emptyBars = progressBarLength - filledBars;
     const progressBar = "[" + "=".repeat(filledBars) + " ".repeat(emptyBars) + "]";
 
