@@ -14,7 +14,6 @@ const SystemStorage = () => {
                 }
                 const data = await response.json();
 
-                // Ensure numeric conversion for safety
                 setStorageInfo({
                     totalStorage: parseFloat(data.totalStorage),
                     usedStorage: parseFloat(data.usedStorage),
@@ -35,18 +34,15 @@ const SystemStorage = () => {
 
     const { totalStorage, usedStorage } = storageInfo;
 
-    // Prevent invalid values
+    // Calculate percentage used
     const percentageUsed = totalStorage > 0
         ? Math.min(Math.max((usedStorage / totalStorage) * 100, 0), 100)
         : 0;
 
     const progressBarLength = 10; // Fixed length for the progress bar
-    const filledBars = Math.round((percentageUsed / 100) * progressBarLength);
-    const progressBar =
-        "[" +
-        "=".repeat(filledBars) +
-        "\ ".repeat(progressBarLength - filledBars) +
-        "]";
+    const filledBars = Math.floor((percentageUsed / 100) * progressBarLength);
+    const emptyBars = progressBarLength - filledBars;
+    const progressBar = "[" + "=".repeat(filledBars) + " ".repeat(emptyBars) + "]";
 
     return (
         <div className="relative group cursor-default my-4 flex items-center text-white px-1 pr-1 py-0.5 rounded-md border border-[#b7bdc8] w-fit">
