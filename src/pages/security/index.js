@@ -10,7 +10,7 @@ export default function GoProStream() {
     const handleTakePhoto = async () => {
         setLoading(true);
         try {
-            const response = await fetch('/api/take-photo');
+            const response = await fetch('/api/get-latest-image');
             if (!response.ok) {
                 throw new Error('Failed to take photo.');
             }
