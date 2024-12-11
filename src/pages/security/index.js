@@ -8,18 +8,25 @@ export default function GoProStream() {
 
     const fetchLatestPhoto = async () => {
         setLoading(true);
+        console.log('Initiating fetch for the latest photo...');
         try {
             const response = await fetch('/api/gopro-take-photo', { method: 'POST' });
             const data = await response.json();
+
+            // Log everything received from the API
+            console.log('API Logs:', data.logs);
+
             if (response.ok) {
+                console.log('Photo path received:', data.photoPath);
                 setLatestPhoto(data.photoPath);
             } else {
                 console.error('Error fetching photo:', data.error);
             }
         } catch (error) {
-            console.error('Error fetching photo:', error);
+            console.error('Error in fetchLatestPhoto:', error);
         } finally {
             setLoading(false);
+            console.log('Completed fetchLatestPhoto process.');
         }
     };
 

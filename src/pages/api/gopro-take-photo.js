@@ -1,38 +1,39 @@
 import { exec } from 'child_process';
-import path from 'path';
+import { promisify } from 'util';
 
-export default function handler(req, res) {
-    if (req.method === 'POST') {
-        const mediaListCommand = `curl -s "http://10.5.5.9/gp/gpMediaList"`;
-        exec(mediaListCommand, (error, stdout) => {
-            if (error) {
-                console.error('Error fetching media list:', error);
-                return res.status(500).json({ error: 'Failed to fetch media list.' });
-            }
+const execAsync = promisify(exec);
 
-            try {
-                const mediaList = JSON.parse(stdout);
-                const latestMedia = mediaList.media[0]?.fs.slice(-1)[0];
-                if (!latestMedia || !latestMedia.n.endsWith('.JPG')) {
-                    return res.status(404).json({ error: 'No valid photo found.' });
-                }
+export default async function handler(req, res) {
+    const logs = [];
 
-                const latestPhotoPath = `http://10.5.5.9:80/videos/DCIM/${mediaList.media[0].d}/${latestMedia.n}`;
-                const downloadCommand = `curl -o ./public/latest_photo.jpg "${latestPhotoPath}"`;
-                exec(downloadCommand, (downloadError) => {
-                    if (downloadError) {
-                        console.error('Error downloading latest photo:', downloadError);
-                        return res.status(500).json({ error: 'Failed to download the latest photo.' });
-                    }
+    if (req.method !== 'POST') {
+        const errorMessage = 'Invalid request method. Only POST is allowed.';
+        logs.push({ level: 'error', message: errorMessage });
+        console.error(errorMessage);
+        return res.status(405).json({ error: errorMessage, logs });
+    }
 
-                    res.status(200).json({ photoPath: '/latest_photo.jpg' });
-                });
-            } catch (parseError) {
-                console.error('Error parsing media list:', parseError);
-                res.status(500).json({ error: 'Invalid response from GoPro API.' });
-            }
-        });
-    } else {
-        res.status(405).json({ error: 'Method not allowed.' });
+    try {
+        logs.push({ level: 'info', message: 'Starting the process to fetch the latest photo.' });
+
+        // Step 1: Fetch Media List
+        const { stdout: mediaList } = await execAsync('curl -s "http://10.5.5.9/gp/gpMediaList"');
+        logs.push({ level: 'info', message: 'Fetched media list successfully.', data: mediaList });
+
+        const media = JSON.parse(mediaList);
+        const latestPhoto = media.media[0].fs.pop().n; // Get the latest photo name
+        const photoPath = `http://10.5.5.9:80/videos/DCIM/${media.media[0].d}/${latestPhoto}`;
+        logs.push({ level: 'info', message: `Latest photo determined: ${photoPath}` });
+
+        // Step 2: Download the latest photo
+        const downloadCommand = `curl -o public/latest_photo.jpg "${photoPath}"`;
+        const { stdout: downloadOutput } = await execAsync(downloadCommand);
+        logs.push({ level: 'info', message: 'Photo downloaded successfully.', data: downloadOutput });
+
+        res.status(200).json({ photoPath: '/latest_photo.jpg', logs });
+    } catch (error) {
+        logs.push({ level: 'error', message: 'An error occurred during the process.', data: error.message });
+        console.error('Error in API:', error);
+        res.status(500).json({ error: 'Failed to fetch and download the latest photo.', logs });
     }
 }
