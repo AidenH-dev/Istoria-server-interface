@@ -59,7 +59,12 @@ export default function GoProStream() {
                             <p className="text-white text-center">Loading latest photo...</p>
                         ) : (
                             latestPhoto ? (
-                                <img src={latestPhoto} alt="Latest GoPro Photo" style={{ maxWidth: '100%' }} />
+                                <img
+                                    src={latestPhoto ? `${latestPhoto}?t=${new Date().getTime()}` : ''}
+                                    alt="Latest GoPro Photo"
+                                    style={{ maxWidth: '100%' }}
+                                />
+
                             ) : (
                                 <p className="text-white text-center">No photo available.</p>
                             )
