@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*'); // Adjust for stricter policies if needed
 
   // Forward the GoPro stream from the Linux server
-  const goproStreamUrl = 'http://10.5.5.100:8554'; // Updated GoPro stream address
+  const goproStreamUrl = 'http://10.5.5.9:8554'; // Updated GoPro stream address
 
   try {
     const response = await fetch(goproStreamUrl);
