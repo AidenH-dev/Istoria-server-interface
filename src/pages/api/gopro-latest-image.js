@@ -1,14 +1,28 @@
 export default async function handler(req, res) {
   try {
-      const mediaListResponse = await fetch('http://10.5.5.9/gp/gpMediaList');
-      const mediaList = await mediaListResponse.json();
-      
-      const latestMedia = mediaList.media[0].fs[0]; // Get the latest media file
-      const imageUrl = `http://10.5.5.9:8080/videos/${mediaList.media[0].d}/${latestMedia.n}`;
-      
-      res.status(200).json({ imageUrl });
+      // Fetch the media list from the GoPro
+      const response = await fetch("http://10.5.5.9/gp/gpMediaList");
+      if (!response.ok) {
+          throw new Error(`GoPro API error: ${response.statusText}`);
+      }
+
+      // Parse the JSON response
+      const data = await response.json();
+
+      // Navigate to the latest image
+      const media = data.media?.[0]?.fs || [];
+      const latestImage = media.reverse().find((item) => item.n.endsWith(".JPG"));
+
+      if (!latestImage) {
+          throw new Error("No image found in the media list.");
+      }
+
+      // Construct the full URL for the latest image
+      const imageUrl = `http://10.5.5.9:8080/${data.media[0].d}/${latestImage.n}`;
+
+      res.status(200).json({ url: imageUrl });
   } catch (error) {
-      console.error('Error fetching GoPro media list:', error);
-      res.status(500).json({ error: 'Failed to fetch latest image' });
+      console.error("Error fetching GoPro latest image:", error.message);
+      res.status(500).json({ error: error.message });
   }
 }
