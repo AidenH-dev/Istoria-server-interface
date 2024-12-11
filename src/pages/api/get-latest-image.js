@@ -1,5 +1,8 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import fs from 'fs';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 const execPromise = promisify(exec);
 
@@ -7,16 +10,18 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
         try {
             console.log('Received GET request');
-            
-            // Use curl to fetch the media list
+
+            // Fetch the media list
             console.log('Fetching media list...');
             const curlMediaList = await execPromise('curl -s http://10.5.5.9/gp/gpMediaList');
-            console.log('Raw media list response:', curlMediaList.stdout);
-
-            // Parse response if it's a string
-            const mediaList = typeof curlMediaList.stdout === 'string'
-                ? JSON.parse(curlMediaList.stdout)
-                : curlMediaList.stdout;
+            let mediaList;
+            try {
+                mediaList = JSON.parse(curlMediaList.stdout);
+            } catch (err) {
+                console.error('Error parsing JSON:', err);
+                res.status(500).json({ error: 'Failed to parse media list' });
+                return;
+            }
 
             console.log('Media list fetched successfully:', mediaList);
 
@@ -26,28 +31,37 @@ export default async function handler(req, res) {
 
             if (!latestDir || !latestFile) {
                 console.error('No valid directory or file found.');
-                return res.status(404).json({ error: 'No images found in media list' });
+                res.status(404).json({ error: 'No images found in media list' });
+                return;
             }
 
             const imageUrl = `http://10.5.5.9:80/videos/DCIM/${latestDir}/${latestFile}`;
             console.log('Constructed image URL:', imageUrl);
 
-            // Set proper headers for image
-            res.setHeader('Content-Type', 'image/jpeg');
+            // Generate a unique filename
+            const uniqueFilename = `${uuidv4()}.jpg`;
+            const savePath = path.join(process.cwd(), 'public', uniqueFilename);
 
-            console.log('Starting image streaming...');
-            
+            // Use curl to download the image and save it
+            console.log('Downloading image and saving to:', savePath);
             const curlProcess = exec(`curl -s "${imageUrl}"`);
 
-            curlProcess.stdout.pipe(res);
+            const writeStream = fs.createWriteStream(savePath);
+            curlProcess.stdout.pipe(writeStream);
 
-            curlProcess.stdout.on('end', () => {
-                console.log('Image streaming completed successfully.');
+            writeStream.on('finish', () => {
+                console.log('Image saved successfully:', savePath);
+                res.status(200).json({ message: 'Image saved successfully', filePath: `/public/${uniqueFilename}` });
             });
 
-            curlProcess.stderr.on('data', (data) => {
-                console.error('Curl process error:', data.toString());
-                res.status(500).json({ error: 'Error during image streaming' });
+            writeStream.on('error', (error) => {
+                console.error('Error saving image:', error);
+                res.status(500).json({ error: 'Failed to save image' });
+            });
+
+            curlProcess.stderr.on('data', (error) => {
+                console.error('Error streaming image:', error.toString());
+                res.status(500).json({ error: 'Failed to stream image' });
             });
 
         } catch (error) {
