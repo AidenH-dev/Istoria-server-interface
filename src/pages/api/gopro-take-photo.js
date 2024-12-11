@@ -1,7 +1,9 @@
+import { exec } from 'child_process';
+import { promisify } from 'util'; // Import promisify
 import fs from 'fs';
 import path from 'path';
 
-const execAsync = promisify(exec);
+const execAsync = promisify(exec); // Use promisify to convert exec to a promise-based function
 
 export default async function handler(req, res) {
     const logs = [];
