@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 
 export default function GoProStream() {
     const [latestPhoto, setLatestPhoto] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const fetchLatestPhoto = async () => {
+        setLoading(true);
         try {
             const response = await fetch('/api/gopro-take-photo', { method: 'POST' });
             const data = await response.json();
@@ -39,6 +40,12 @@ export default function GoProStream() {
                 <div className="mt-4 bg-gray-800 text-white p-4 border border-[#b7bdc8] rounded-md">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-semibold">Live Stream</h2>
+                        <button
+                            onClick={fetchLatestPhoto}
+                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                        >
+                            Refresh Photo
+                        </button>
                     </div>
                     <div className="relative w-full h-96 bg-black border border-gray-700 rounded-md overflow-hidden">
                         {loading ? (
