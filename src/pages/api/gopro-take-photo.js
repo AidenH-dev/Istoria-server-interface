@@ -1,67 +1,40 @@
 import { exec } from 'child_process';
-import fs from 'fs';
-import path from 'path';
+import util from 'util';
+
+const execPromise = util.promisify(exec);
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
-  }
-
   try {
     // Step 1: Trigger the GoPro to take a photo
-    const takePhotoCommand = `curl "http://10.5.5.9/gp/gpControl/command/shutter?p=1"`;
-
-    await new Promise((resolve, reject) => {
-      exec(takePhotoCommand, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error taking photo: ${stderr}`);
-          reject(error);
-        } else {
-          console.log(`Photo taken: ${stdout}`);
-          resolve();
-        }
-      });
-    });
+    const takePhotoCommand = `curl -s "http://10.5.5.9/gp/gpControl/command/shutter?p=1"`;
+    await execPromise(takePhotoCommand);
 
     // Step 2: Fetch the latest media list
-    const mediaListCommand = `curl "http://10.5.5.9/gp/gpMediaList"`;
+    const mediaListCommand = `curl -s "http://10.5.5.9/gp/gpMediaList"`;
+    const { stdout } = await execPromise(mediaListCommand);
+    const mediaList = JSON.parse(stdout);
 
-    const mediaList = await new Promise((resolve, reject) => {
-      exec(mediaListCommand, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error fetching media list: ${stderr}`);
-          reject(error);
-        } else {
-          resolve(JSON.parse(stdout));
-        }
-      });
-    });
+    if (!mediaList.media || mediaList.media.length === 0) {
+      throw new Error("No media found on the GoPro.");
+    }
 
-    // Step 3: Get the latest photo's path
-    const mediaFolder = mediaList.media[0].d;
-    const latestFile = mediaList.media[0].fs[0].n;
-    const fileUrl = `http://10.5.5.9:8080/videos/DCIM/${mediaFolder}/${latestFile}`;
+    // Step 3: Locate the latest photo in the media folder
+    const mediaFolder = mediaList.media[0]?.d; // e.g., '100GOPRO'
+    const latestPhoto = mediaList.media[0]?.fs.find((file) => file.n.endsWith('.JPG'));
+
+    if (!mediaFolder || !latestPhoto) {
+      throw new Error("Failed to retrieve the latest photo information.");
+    }
 
     // Step 4: Download the latest photo
-    const downloadCommand = `curl -o ./public/${latestFile} "${fileUrl}"`;
+    const fileUrl = `http://10.5.5.9:8080/DCIM/${mediaFolder}/${latestPhoto.n}`;
+    const downloadCommand = `curl -o ./public/${latestPhoto.n} "${fileUrl}"`;
+    await execPromise(downloadCommand);
 
-    await new Promise((resolve, reject) => {
-      exec(downloadCommand, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error downloading photo: ${stderr}`);
-          reject(error);
-        } else {
-          console.log(`Photo downloaded: ${stdout}`);
-          resolve();
-        }
-      });
-    });
-
-    // Respond with the latest photo URL
-    res.status(200).json({ photoUrl: `/public/${latestFile}` });
+    // Step 5: Respond with the latest photo URL
+    res.status(200).json({ photoUrl: `/${latestPhoto.n}` });
   } catch (error) {
-    console.error('Error in API:', error);
-    res.status(500).json({ error: 'Failed to take and save photo' });
+    console.error('Error in API:', error.message);
+    res.status(500).json({ error: error.message });
   }
 }
