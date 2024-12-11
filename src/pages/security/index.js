@@ -1,3 +1,5 @@
+import Navbar from '@/components/Navbar';
+import Head from 'next/head';
 import { useState, useEffect } from 'react';
 
 export default function GoProStream() {
@@ -41,7 +43,7 @@ export default function GoProStream() {
                         ) : (
                             <p>Loading latest photo...</p>
                         )*/}
-                        <img src={latestPhoto} alt="Latest GoPro Photo" style={{ maxWidth: '100%' }} />
+                        <img src={"/latest_photo.jpg"} alt="Latest GoPro Photo" style={{ maxWidth: '100%' }} />
 
                     </div>
                 </div>
