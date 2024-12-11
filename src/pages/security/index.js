@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import Navbar from '../components/Navbar';
+import Navbar from '@/components/Navbar';
 import { BiCamera } from 'react-icons/bi';
 import { RiArrowDropUpLine, RiArrowDropDownLine } from "react-icons/ri";
 import { TbDots } from "react-icons/tb";
