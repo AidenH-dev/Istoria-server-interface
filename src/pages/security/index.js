@@ -1,40 +1,28 @@
-import Navbar from '@/components/Navbar';
-import Head from 'next/head';
+import { useState } from 'react';
 
-export default function GoProMediaList() {
-    const fetchMediaList = async () => {
+export default function LatestGoProImage() {
+    const [latestPhoto, setLatestPhoto] = useState(null);
+    const [error, setError] = useState(null);
+
+    const fetchLatestImage = async () => {
         try {
-            const response = await fetch('/api/gopro-media-list');
-            const data = await response.json();
+            const response = await fetch('/api/fetch-latest-image');
             if (response.ok) {
-                console.log('Media List:', data.mediaList);
+                setLatestPhoto('/latest_photo.jpg'); // URL to the saved image
             } else {
-                console.error('Error fetching media list:', data.error);
+                const errorResponse = await response.json();
+                setError(errorResponse.error || 'Failed to fetch the latest image');
             }
-        } catch (error) {
-            console.error('Error fetching media list:', error);
+        } catch (fetchError) {
+            setError('An unexpected error occurred while fetching the image');
         }
     };
 
     return (
-        <div className="h-screen bg-[#02040a]">
-            <Head>
-                <title>GoPro Media List</title>
-            </Head>
-            <Navbar />
-            <div className="container mx-auto mt-16">
-                <h1 className="text-3xl font-bold text-white">GoPro Media List</h1>
-                <div className="mt-4 bg-gray-800 text-white p-4 border border-[#b7bdc8] rounded-md">
-                    <div className="flex justify-center">
-                        <button
-                            onClick={fetchMediaList}
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        >
-                            Fetch Media List
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div>
+            <button onClick={fetchLatestImage}>Fetch Latest Image</button>
+            {latestPhoto && <img src={latestPhoto} alt="Latest GoPro Image" />}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
 }
