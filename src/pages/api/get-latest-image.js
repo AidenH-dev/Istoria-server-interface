@@ -16,7 +16,7 @@ export default async function handler(req, res) {
                 `curl -s "$(curl -s "http://10.5.5.9/gp/gpMediaList" | jq -r '.media[0] | "http://10.5.5.9:80/videos/DCIM/\\(.d)/\\(.fs[-1].n)"')"`
             );
 
-            const uniqueFilename = `latest_image_${Date.now()}.jpg`;
+            const uniqueFilename = `FASTlatest_image_${Date.now()}.jpg`;
             const imagePath = path.join(process.cwd(), 'public', uniqueFilename);
 
             const curlSaveCommand = `curl -s "${mediaUrl.trim()}" -o "${imagePath}"`;
