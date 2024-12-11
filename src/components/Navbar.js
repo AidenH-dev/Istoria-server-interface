@@ -110,7 +110,7 @@ export default function Navbar() {
                     </Link>
 
                     {/* Security Camera & Sensor Systems */}
-                    <Link href="/archive-viewer">
+                    <Link href="/security">
                         <div className="relative group text-sm hover:text-gray-300 hover:bg-[#2f3742] p-1 rounded-md border border-[#b7bdc8]">
                             <TbHomeShield className="w-5 h-5 cursor-pointer" />
                             {/* Tooltip */}
