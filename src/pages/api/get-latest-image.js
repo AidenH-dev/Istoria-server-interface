@@ -1,41 +1,36 @@
-import { exec } from 'child_process';
+import https from 'https';
 
 export default async function handler(req, res) {
     if (req.method === 'GET') {
         try {
-            // Use curl command to fetch the media list
-            exec('curl -s "http://10.5.5.9/gp/gpMediaList"', (error, stdout, stderr) => {
-                if (error) {
-                    console.error('Error executing curl:', error);
-                    return res.status(500).json({ error: 'Failed to fetch media list using curl' });
-                }
+            // Fetch the media list
+            const response = await fetch('http://10.5.5.9/gp/gpMediaList');
+            if (!response.ok) {
+                return res.status(500).json({ error: 'Failed to fetch media list' });
+            }
 
-                if (stderr) {
-                    console.error('stderr from curl:', stderr);
-                    return res.status(500).json({ error: 'Curl command failed' });
-                }
+            const mediaList = await response.json();
+            const latestDir = mediaList.media[0]?.d;
+            const files = mediaList.media[0]?.fs || [];
+            const latestFile = files[files.length - 1]?.n;
 
-                try {
-                    // Parse the response
-                    const mediaList = JSON.parse(stdout);
-                    const latestDir = mediaList.media[0]?.d;
-                    const files = mediaList.media[0]?.fs || [];
-                    const latestFile = files[files.length - 1]?.n;
+            if (!latestDir || !latestFile) {
+                return res.status(404).json({ error: 'No images found in media list' });
+            }
 
-                    if (!latestDir || !latestFile) {
-                        return res.status(404).json({ error: 'No images found in media list' });
-                    }
+            const fileUrl = `http://10.5.5.9:80/videos/DCIM/${latestDir}/${latestFile}`;
 
-                    // Construct the URL for the latest image
-                    const fileUrl = `http://10.5.5.9:80/videos/DCIM/${latestDir}/${latestFile}`;
-                    res.status(200).json({ imageUrl: fileUrl });
-                } catch (parseError) {
-                    console.error('Error parsing media list:', parseError);
-                    res.status(500).json({ error: 'Failed to parse media list response' });
-                }
+            // Stream the image file directly to the response
+            https.get(fileUrl, (imageResponse) => {
+                res.setHeader('Content-Type', imageResponse.headers['content-type']);
+                res.setHeader('Content-Length', imageResponse.headers['content-length']);
+                imageResponse.pipe(res);
+            }).on('error', (err) => {
+                console.error('Error streaming image:', err);
+                res.status(500).json({ error: 'Failed to stream image' });
             });
         } catch (error) {
-            console.error('Unexpected error:', error);
+            console.error('Error fetching media list:', error);
             res.status(500).json({ error: 'Unexpected server error' });
         }
     } else {

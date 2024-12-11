@@ -3,27 +3,18 @@ import Head from 'next/head';
 import { useState } from 'react';
 
 export default function GoProStream() {
-    const [latestImageUrl, setLatestImageUrl] = useState(null);
+    const [imageUrl, setImageUrl] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const fetchLatestImage = async () => {
+    const fetchImage = async () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch('/api/get-latest-image');
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status} - ${response.statusText}`);
-            }
-            const data = await response.json();
-            if (data.imageUrl) {
-                setLatestImageUrl(data.imageUrl);
-            } else {
-                setError('No image URL returned from the server');
-            }
+            setImageUrl('/api/get-latest-image');
         } catch (err) {
-            console.error('Error fetching latest image:', err);
-            setError('Failed to fetch the latest image');
+            console.error('Error fetching image:', err);
+            setError('Failed to fetch image');
         } finally {
             setLoading(false);
         }
@@ -42,7 +33,7 @@ export default function GoProStream() {
                         <h2 className="text-xl font-semibold">Latest Image</h2>
                         <button
                             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                            onClick={fetchLatestImage}
+                            onClick={fetchImage}
                             disabled={loading}
                         >
                             {loading ? 'Loading...' : 'Fetch Latest Image'}
@@ -51,8 +42,8 @@ export default function GoProStream() {
                     <div className="relative w-full h-96 bg-black border border-gray-700 rounded-md overflow-hidden flex items-center justify-center">
                         {error ? (
                             <p className="text-red-500 text-center">{error}</p>
-                        ) : latestImageUrl ? (
-                            <img src={latestImageUrl} alt="Latest GoPro Image" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                        ) : imageUrl ? (
+                            <img src={imageUrl} alt="Latest GoPro Image" style={{ maxWidth: '100%', maxHeight: '100%' }} />
                         ) : (
                             <p className="text-white text-center">{loading ? 'Loading image...' : 'No image to display'}</p>
                         )}
@@ -62,3 +53,4 @@ export default function GoProStream() {
         </div>
     );
 }
+
