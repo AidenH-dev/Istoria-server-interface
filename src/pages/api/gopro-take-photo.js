@@ -1,44 +1,38 @@
-import { promises as fs } from "fs";
-import path from "path";
-import fetch from "node-fetch";
+import { exec } from 'child_process';
+import path from 'path';
 
-export default async function handler(req, res) {
-    try {
-        // Fetch the media list from the GoPro
-        const mediaListResponse = await fetch("http://10.5.5.9/gp/gpMediaList");
-        const mediaList = await mediaListResponse.json();
+export default function handler(req, res) {
+    if (req.method === 'POST') {
+        const mediaListCommand = `curl -s "http://10.5.5.9/gp/gpMediaList"`;
+        exec(mediaListCommand, (error, stdout) => {
+            if (error) {
+                console.error('Error fetching media list:', error);
+                return res.status(500).json({ error: 'Failed to fetch media list.' });
+            }
 
-        // Ensure the media list is valid
-        if (!mediaList.media || mediaList.media.length === 0) {
-            return res.status(500).json({ error: "No media found in GoPro response." });
-        }
+            try {
+                const mediaList = JSON.parse(stdout);
+                const latestMedia = mediaList.media[0]?.fs.slice(-1)[0];
+                if (!latestMedia || !latestMedia.n.endsWith('.JPG')) {
+                    return res.status(404).json({ error: 'No valid photo found.' });
+                }
 
-        // Extract the latest photo
-        const folder = mediaList.media[0].d;
-        const latestPhoto = mediaList.media[0].fs
-            .filter(file => file.n.endsWith(".JPG"))
-            .sort((a, b) => parseInt(b.cre) - parseInt(a.cre))[0];
+                const latestPhotoPath = `http://10.5.5.9:80/videos/DCIM/${mediaList.media[0].d}/${latestMedia.n}`;
+                const downloadCommand = `curl -o ./public/latest_photo.jpg "${latestPhotoPath}"`;
+                exec(downloadCommand, (downloadError) => {
+                    if (downloadError) {
+                        console.error('Error downloading latest photo:', downloadError);
+                        return res.status(500).json({ error: 'Failed to download the latest photo.' });
+                    }
 
-        if (!latestPhoto) {
-            return res.status(404).json({ error: "No photos found in the media list." });
-        }
-
-        const photoUrl = `http://10.5.5.9:80/videos/DCIM/${folder}/${latestPhoto.n}`;
-
-        // Download the latest photo
-        const photoResponse = await fetch(photoUrl);
-        if (!photoResponse.ok) {
-            return res.status(500).json({ error: "Failed to download the photo." });
-        }
-
-        // Save the photo to the public folder
-        const photoBuffer = await photoResponse.buffer();
-        const photoPath = path.join(process.cwd(), "public", "latest_photo.jpg");
-        await fs.writeFile(photoPath, photoBuffer);
-
-        res.status(200).json({ message: "Latest photo downloaded successfully.", photoPath: "/latest_photo.jpg" });
-    } catch (error) {
-        console.error("Error in API:", error);
-        res.status(500).json({ error: "An error occurred while processing the request." });
+                    res.status(200).json({ photoPath: '/latest_photo.jpg' });
+                });
+            } catch (parseError) {
+                console.error('Error parsing media list:', parseError);
+                res.status(500).json({ error: 'Invalid response from GoPro API.' });
+            }
+        });
+    } else {
+        res.status(405).json({ error: 'Method not allowed.' });
     }
 }
