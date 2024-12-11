@@ -16,7 +16,6 @@ export default function GoProStream() {
                 <div className="mt-4 bg-gray-800 text-white p-4 border border-[#b7bdc8] rounded-md">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-xl font-semibold">Live Stream</h2>
-                        <ConnectionStatus />
                     </div>
                     <div className="relative w-full h-96 bg-black border border-gray-700 rounded-md overflow-hidden">
                                 <img
