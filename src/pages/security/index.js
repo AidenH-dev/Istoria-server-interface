@@ -8,6 +8,7 @@ import { TbDots } from "react-icons/tb";
 export default function GoProStream() {
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [connectionStatus, setConnectionStatus] = useState('connecting'); // 'connected', 'disconnected', or 'connecting'
+    const [latestImageUrl, setLatestImageUrl] = useState(null);
 
     useEffect(() => {
         const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -27,6 +28,27 @@ export default function GoProStream() {
 
         return () => clearTimeout(connectionTimeout);
     }, []);
+
+    useEffect(() => {
+        if (connectionStatus === 'connected') {
+            // Fetch the latest GoPro image
+            const fetchLatestImage = async () => {
+                try {
+                    const response = await fetch('/api/gopro-latest-image'); // API route to fetch latest image
+                    const data = await response.json();
+                    setLatestImageUrl(data.imageUrl);
+                } catch (error) {
+                    console.error('Error fetching latest image:', error);
+                }
+            };
+
+            fetchLatestImage();
+            // Periodically refresh the image
+            const interval = setInterval(fetchLatestImage, 5000);
+
+            return () => clearInterval(interval);
+        }
+    }, [connectionStatus]);
 
     const ConnectionStatus = () => {
         if (connectionStatus === 'connected') {
@@ -64,15 +86,28 @@ export default function GoProStream() {
                         <ConnectionStatus />
                     </div>
                     {connectionStatus === 'connected' ? (
-                        <div className="relative w-full h-96 bg-black border border-gray-700 rounded-md overflow-hidden">
-                            <video
-                                className="w-full h-full object-cover"
-                                autoPlay
-                                controls
-                                src="/api/gopro-stream"
-                            />
-
-                        </div>
+                        <>
+                            <div className="relative w-full h-96 bg-black border border-gray-700 rounded-md overflow-hidden">
+                                <video
+                                    className="w-full h-full object-cover"
+                                    autoPlay
+                                    controls
+                                    src="/api/gopro-stream"
+                                />
+                            </div>
+                            <div className="mt-4">
+                                <h2 className="text-lg font-semibold mb-2">Latest Photo</h2>
+                                {latestImageUrl ? (
+                                    <img
+                                        className="w-full h-auto rounded-md border border-gray-700"
+                                        src={latestImageUrl}
+                                        alt="Latest GoPro"
+                                    />
+                                ) : (
+                                    <p className="text-gray-400">Loading latest image...</p>
+                                )}
+                            </div>
+                        </>
                     ) : (
                         <div className="flex justify-center items-center h-96 bg-gray-700 rounded-md">
                             <p className="text-gray-400">Awaiting connection...</p>
