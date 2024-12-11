@@ -1,17 +1,25 @@
 import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execPromise = promisify(exec);
 
 export default async function handler(req, res) {
     if (req.method === 'GET') {
         try {
             console.log('Received GET request');
             
-            // Log start of fetching media list
+            // Use curl to fetch the media list
             console.log('Fetching media list...');
-            const curlMediaList = await exec('curl -s http://10.5.5.9/gp/gpMediaList');
-            
-            console.log('Media list fetched successfully');
+            const curlMediaList = await execPromise('curl -s http://10.5.5.9/gp/gpMediaList');
+            console.log('Raw media list response:', curlMediaList.stdout);
 
-            const mediaList = JSON.parse(curlMediaList.stdout);
+            // Parse response if it's a string
+            const mediaList = typeof curlMediaList.stdout === 'string'
+                ? JSON.parse(curlMediaList.stdout)
+                : curlMediaList.stdout;
+
+            console.log('Media list fetched successfully:', mediaList);
+
             const latestDir = mediaList.media[0]?.d;
             const files = mediaList.media[0]?.fs || [];
             const latestFile = files[files.length - 1]?.n;
