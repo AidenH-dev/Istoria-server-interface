@@ -3,27 +3,30 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 
 export default function GoProStream() {
-    //const [latestPhoto, setLatestPhoto] = useState(null);
-    //
-    //const fetchLatestPhoto = async () => {
-    //    try {
-    //        const response = await fetch('/api/gopro-take-photo', { method: 'POST' });
-    //        const data = await response.json();
-    //        if (response.ok) {
-    //            setLatestPhoto(data.photoUrl);
-    //        } else {
-    //            console.error('Error fetching photo:', data.error);
-    //        }
-    //    } catch (error) {
-    //        console.error('Error fetching photo:', error);
-    //    }
-    //};
-    //
-    //useEffect(() => {
-    //    fetchLatestPhoto();
-    //    const interval = setInterval(fetchLatestPhoto, 10000); // Update every 10 seconds
-    //    return () => clearInterval(interval);
-    //}, []);
+    const [latestPhoto, setLatestPhoto] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const fetchLatestPhoto = async () => {
+        try {
+            const response = await fetch('/api/gopro-take-photo', { method: 'POST' });
+            const data = await response.json();
+            if (response.ok) {
+                setLatestPhoto(data.photoPath);
+            } else {
+                console.error('Error fetching photo:', data.error);
+            }
+        } catch (error) {
+            console.error('Error fetching photo:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchLatestPhoto();
+        const interval = setInterval(fetchLatestPhoto, 10000); // Update every 10 seconds
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <div className="h-screen bg-[#02040a]">
@@ -38,13 +41,15 @@ export default function GoProStream() {
                         <h2 className="text-xl font-semibold">Live Stream</h2>
                     </div>
                     <div className="relative w-full h-96 bg-black border border-gray-700 rounded-md overflow-hidden">
-                        {/*latestPhoto ? (
-                            <img src={latestPhoto} alt="Latest GoPro Photo" style={{ maxWidth: '100%' }} />
+                        {loading ? (
+                            <p className="text-white text-center">Loading latest photo...</p>
                         ) : (
-                            <p>Loading latest photo...</p>
-                        )*/}
-                        <img src={"/latest_photo.jpg"} alt="Latest GoPro Photo" style={{ maxWidth: '100%' }} />
-
+                            latestPhoto ? (
+                                <img src={latestPhoto} alt="Latest GoPro Photo" style={{ maxWidth: '100%' }} />
+                            ) : (
+                                <p className="text-white text-center">No photo available.</p>
+                            )
+                        )}
                     </div>
                 </div>
             </div>
