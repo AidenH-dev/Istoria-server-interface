@@ -6,8 +6,14 @@ export default async function handler(req, res) {
           throw new Error(`GoPro API error: ${response.statusText}`);
       }
 
-      // Parse the JSON response
-      const data = await response.json();
+      // Read and parse the response
+      const textData = await response.text();
+      let data;
+      try {
+          data = JSON.parse(textData);
+      } catch (err) {
+          throw new Error(`Failed to parse JSON: ${err.message}`);
+      }
 
       // Navigate to the latest image
       const media = data.media?.[0]?.fs || [];
@@ -26,3 +32,4 @@ export default async function handler(req, res) {
       res.status(500).json({ error: error.message });
   }
 }
+
