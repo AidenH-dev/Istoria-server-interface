@@ -83,7 +83,7 @@ export default function GoProStream() {
                         latestImageUrl ? (
                             <div className="relative w-full h-96 bg-black border border-gray-700 rounded-md overflow-hidden">
                                 <img
-                                    src={latestImageUrl}
+                                    src={"/GOPR0072.JPG"}
                                     alt="Latest GoPro"
                                     className="w-full h-full object-cover"
                                 />
