@@ -19,7 +19,7 @@ export default function GoProStream() {
                         <h2 className="text-xl font-semibold">Live</h2>
                     </div>
                     <div className="relative w-full h-96 bg-black border border-gray-700 rounded-md overflow-hidden flex items-center justify-center">
-                    <Image src={"/latest_image_1733918505.jpg"} />
+                    <Image src={"/latest_image_1733918688.jpg"} />
                     </div>
                 </div>
             </div>
