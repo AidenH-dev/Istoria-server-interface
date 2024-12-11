@@ -79,25 +79,13 @@ export default function GoProStream() {
                         <h2 className="text-xl font-semibold">Live Stream</h2>
                         <ConnectionStatus />
                     </div>
-                    {connectionStatus === "connected" ? (
-                        latestImageUrl ? (
-                            <div className="relative w-full h-96 bg-black border border-gray-700 rounded-md overflow-hidden">
+                    <div className="relative w-full h-96 bg-black border border-gray-700 rounded-md overflow-hidden">
                                 <img
                                     src={"/GOPR0072.JPG"}
                                     alt="Latest GoPro"
                                     className="w-full h-full object-cover"
                                 />
                             </div>
-                        ) : (
-                            <div className="flex justify-center items-center h-96 bg-gray-700 rounded-md">
-                                <p className="text-gray-400">Loading latest image...</p>
-                            </div>
-                        )
-                    ) : (
-                        <div className="flex justify-center items-center h-96 bg-gray-700 rounded-md">
-                            <p className="text-gray-400">Awaiting connection...</p>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>
