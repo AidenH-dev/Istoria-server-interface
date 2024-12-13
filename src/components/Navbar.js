@@ -73,7 +73,7 @@ export default function Navbar() {
                     </div>
 
                     {/* File Manager */}
-                    <Link href="/file-manager">
+                    <Link href="/file-system">
                         <div className="relative group text-sm hover:text-gray-300 hover:bg-[#2f3742] p-1 rounded-md border border-[#b7bdc8]">
                             <PiFilesDuotone className="w-5 h-5 cursor-pointer" />
                             {/* Tooltip */}

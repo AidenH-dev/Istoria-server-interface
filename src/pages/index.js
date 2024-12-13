@@ -11,6 +11,7 @@ import WeatherInterface from '@/components/WeatherInterface'; // Adjust path as 
 import UsersOnline from '@/components/UsersOnline';
 import SecurityCamStatus from '@/components/SecurityCamStatus';
 import SystemStorage from '@/components/AvailableStorage';
+import FileSidebar from '@/components/FileSidebar';
 
 
 export default function Home() {
@@ -77,7 +78,9 @@ export default function Home() {
         />
       </Head>
       <Navbar />
+
       <div className="container mx-24 mt-16">
+
         <h1 className="text-3xl font-bold text-white">Istoria System Interface</h1>
         <nav className="bg-[#02040a] w-fit text-white border-b border-[#b7bdc8] mt-4">
           <div className="w-full flex justify-between items-center p-4">
