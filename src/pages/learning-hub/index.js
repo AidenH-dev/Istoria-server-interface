@@ -27,6 +27,10 @@ import { FcCommandLine } from "react-icons/fc";
 import { FcCellPhone } from "react-icons/fc";
 import { FcMultipleCameras } from "react-icons/fc";
 import { FcElectronics } from "react-icons/fc";
+import { SiBlender } from "react-icons/si";
+import { BsRouterFill } from "react-icons/bs";
+import { FcStart } from "react-icons/fc";
+
 
 
 export default function Home() {
@@ -48,23 +52,22 @@ export default function Home() {
         )
     );
 
-    const items = [
-        { name: 'Drawing', icon: <FcEditImage /> },
-        { name: 'Music', icon: <FcMusic /> },
-        { name: 'Writing', icon: <FcList /> },
-        { name: 'AI', icon: <FaMicrochip className='text-yellow-600' /> },
-        { name: 'Painting', icon: <TiBrush className='text-sky-500' /> },
-        { name: 'Photography', icon: <FcOldTimeCamera /> },
-        { name: 'Statistics', icon: <FcComboChart /> },
-    ];
     const items2 = [
-        { name: 'Sound Design', icon: <FcSpeaker /> },
-        { name: 'Editing', icon: <FcFilm /> },
-        { name: 'Hacking', icon: <FcCommandLine className='shadow-lg' /> },
-        { name: 'Radio', icon: <FcCellPhone /> },
-        { name: 'Security', icon: <FcMultipleCameras /> },
-        { name: 'Electronics', icon: <FcElectronics /> },
-    ]
+        { name: 'Drawing', icon: <FcEditImage />, href: '/learning-hub/drawing' },
+        { name: 'Music', icon: <FcMusic />, href: '/learning-hub/music' },
+        { name: 'Writing', icon: <FcList />, href: '/learning-hub/writing' },
+        { name: 'Media Analysis', icon: <FcStart />, href: '/learning-hub/media-analysis' },
+        { name: 'AI', icon: <FaMicrochip className="text-yellow-600" />, href: '/learning-hub/ai' },
+        { name: 'Painting', icon: <TiBrush className="text-sky-500" />, href: '/learning-hub/painting' },
+        { name: 'Blender', icon: <SiBlender className="text-[#eb7700]" />, href: '/learning-hub/blender' },
+        { name: 'Sound Design', icon: <FcSpeaker />, href: '/learning-hub/sound-design' },
+        { name: 'Editing', icon: <FcFilm />, href: '/learning-hub/editing' },
+        { name: 'Hacking', icon: <FcCommandLine className="shadow-lg" />, href: '/learning-hub/hacking' },
+        { name: 'Photography', icon: <FcOldTimeCamera />, href: '/learning-hub/photography' },
+        { name: 'Electronics', icon: <FcElectronics />, href: '/learning-hub/electronics' },
+        { name: 'Statistics', icon: <FcComboChart />, href: '/learning-hub/statistics' },
+    ];
+
 
 
     return (
@@ -92,28 +95,19 @@ export default function Home() {
                             className="pl-9 w-full bg-[#02040a] active:outline-sky-600 text-sm px-3 py-2 rounded-md text-white border border-[#b7bdc8] focus:outline-sky-600 focus:border-sky-600 focus:ring focus:ring-sky-600"
                         />
                     </div>
-                    <div className="flex flex-cols-6 md:grid-cols-7 gap-6 mt-10 mx-10">
-                        {items.map((item, index) => (
-                            <div
-                                key={index}
-                                className="flex flex-row justify-center items-center text-lg w-full text-gray-900 bg-gray-300 hover:bg-[#29313c] hover:text-white hover:scale-105 hover:shadow-lg focus:bg-[#29313c] transition-all duration-300 ease-in-out p-6 rounded-full font-semibold"
-                            >
-                                <div className="text-3xl mr-2">{item.icon}</div>
-                                {item.name}
-                            </div>
-                        ))}
-                    </div>
-                    <div className="flex flex-wrap justify-center gap-6 mt-5 mx-auto">
+                    <div className="flex flex-wrap justify-center gap-6 mt-10 mx-auto">
                         {items2.map((item, index) => (
-                            <div
+                            <a
                                 key={index}
+                                href={item.href}
                                 className="flex flex-row justify-center items-center text-lg w-fit text-gray-900 bg-gray-300 hover:bg-[#29313c] hover:text-white hover:scale-105 hover:shadow-lg focus:bg-[#29313c] transition-all duration-300 ease-in-out p-6 rounded-full font-semibold"
                             >
                                 <div className="text-3xl mr-2">{item.icon}</div>
                                 {item.name}
-                            </div>
+                            </a>
                         ))}
                     </div>
+
 
                 </div>
 
