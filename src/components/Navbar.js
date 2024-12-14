@@ -21,6 +21,13 @@ import { SiWebmoney } from "react-icons/si";
 import { IoGlobeOutline } from "react-icons/io5";
 import { IoHardwareChipOutline } from "react-icons/io5";
 import { MdOutlineDriveFileMove } from "react-icons/md";
+import { LuLogs } from "react-icons/lu";
+import { TbLogs } from "react-icons/tb";
+import { BsFillJournalBookmarkFill } from "react-icons/bs";
+import { FaBookBookmark } from "react-icons/fa6";
+import { TbNotebook } from "react-icons/tb";
+import { SiHyperskill } from "react-icons/si";
+import { LuListTree } from "react-icons/lu";
 
 
 
@@ -127,6 +134,17 @@ export default function Navbar() {
                             {/* Tooltip */}
                             <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 bg-white text-sm text-black px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
                                 Information Archive
+                            </div>
+                        </div>
+                    </Link>
+
+                    {/* Learning System For Aquiring Skills */}
+                    <Link href="/learning-hub">
+                        <div className="relative group text-sm hover:text-gray-300 hover:bg-[#2f3742] p-1 rounded-md border border-[#b7bdc8]">
+                        <LuListTree className="w-5 h-5 cursor-pointer font-bold" />
+                            {/* Tooltip */}
+                            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 bg-white text-sm text-black px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                                Learning Hub
                             </div>
                         </div>
                     </Link>
