@@ -188,7 +188,7 @@ export default function StreamingPage() {
                     {"2019 ‧ Film ‧ 1h 54m"}
                   </span>
                 </h3>
-                <p className="text-sm text-gray-400">A ragtag duo of spacefaring bounty-hunters...</p>
+                <p className="text-sm text-gray-400">In Tokyo, a runaway high school student...</p>
               </div>
               <div className="bg-[#1a1a1a] rounded-lg p-4 hover:outline hover:outline-2 hover:outline-white hover:outline-offset-">
                 <img
@@ -202,7 +202,7 @@ export default function StreamingPage() {
                     {"2016 ‧ Film ‧ 2h 9m"}
                   </span>
                 </h3>
-                <p className="text-sm text-gray-400">A ragtag duo of spacefaring bounty-hunters...</p>
+                <p className="text-sm text-gray-400">A grade-school student with a hearing impairment...</p>
               </div>
               <div className="bg-[#1a1a1a] rounded-lg p-4 hover:outline hover:outline-2 hover:outline-white hover:outline-offset-">
                 <img
