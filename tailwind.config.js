@@ -10,6 +10,10 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+
+        transparentPurple: 'rgba(128, 0, 128, 0.4)', // Transparent purple background
+        semiTransparentPurple: 'rgba(128, 0, 128, 0.8)', // Semi-transparent purple border
+
       },
     },
   },
