@@ -5,7 +5,7 @@ const UsersOnline = () => {
     const [usersOnline, setUsersOnline] = useState(0);
 
     useEffect(() => {
-        const socket = new WebSocket("ws://192.168.50.154:8080"); // Update the URL if needed
+        const socket = new WebSocket("ws://192.168.4.163:8080"); // Update the URL if needed
 
         socket.onopen = () => {
             console.log("WebSocket connection established");
