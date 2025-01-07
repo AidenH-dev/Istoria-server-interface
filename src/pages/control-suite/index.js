@@ -112,7 +112,9 @@ export default function IoTDataPage() {
                                                 <td className="py-2 px-4">{row.id}</td>
                                                 <td className="py-2 px-4">{row.temperature}</td>
                                                 <td className="py-2 px-4">{row.humidity}</td>
-                                                <td className="py-2 px-4">{row.timestamp}</td>
+                                                <td className="py-2 px-4">
+                                                    {dayjs(row.timestamp).format('MM/DD/YYYY, hh:mm A')}
+                                                </td>
                                                 <td className="py-2 px-4">{row.device_name}</td>
                                             </tr>
                                         ))}
