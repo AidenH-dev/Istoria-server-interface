@@ -101,6 +101,11 @@ export default function IoTDataPage() {
                             </tbody>
                         </table>
                     </div>
+
+                    Here's the updated graph container segment:
+
+                    jsx
+                    Copy code
                     <div className="w-2/5 ml-4">
                         <div className="flex justify-end mb-2">
                             <button
@@ -118,20 +123,31 @@ export default function IoTDataPage() {
                                 Humidity
                             </button>
                         </div>
-                        {/* Add a container with Tailwind classes for fixed height */}
-                        <div className="h-96 w-full">
+                        {/* Add a container limited to its parent's height */}
+                        <div className="h-full w-full">
                             <Line
                                 data={graphData}
                                 options={{
                                     responsive: true,
-                                    maintainAspectRatio: true, // Keep aspect ratio within container bounds
+                                    maintainAspectRatio: true, // Ensure it fits the container's height
+                                    elements: {
+                                        point: {
+                                            radius: 2, // Small point size for data points
+                                        },
+                                    },
                                     scales: {
                                         x: {
+                                            type: 'category',
+                                            ticks: {
+                                                callback: function (value, index, values) {
+                                                    // Format timestamps using dayjs
+                                                    const rawTimestamp = graphData.labels[index];
+                                                    return dayjs(rawTimestamp).format('MM/DD/YYYY, hh:mm A');
+                                                },
+                                                color: '#FFF',
+                                            },
                                             grid: {
                                                 color: '#444',
-                                            },
-                                            ticks: {
-                                                color: '#FFF',
                                             },
                                         },
                                         y: {
