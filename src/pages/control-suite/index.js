@@ -126,7 +126,7 @@ export default function IoTDataPage() {
                                 data={graphData}
                                 options={{
                                     responsive: true,
-                                    maintainAspectRatio: true, // Ensure it fits the container's height
+                                    maintainAspectRatio: false, // Ensure it fits the container's height
                                     elements: {
                                         point: {
                                             radius: 2, // Small point size for data points
