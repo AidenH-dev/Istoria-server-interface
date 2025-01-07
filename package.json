@@ -15,7 +15,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
-    "reactflow": "^11.11.4"
+    "reactflow": "^11.11.4",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "postcss": "^8",
