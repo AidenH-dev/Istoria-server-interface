@@ -131,13 +131,31 @@ export default function IoTDataPage() {
                 </div>
 
                 {/* View Toggle */}
-                <div className="flex justify-end mb-4">
+                <div className="flex justify-between mb-4">
                     <button
                         onClick={() => setIsTableView(!isTableView)}
                         className="px-4 py-2 bg-green-500 rounded"
                     >
                         Switch to {isTableView ? 'Graph View' : 'Table View'}
                     </button>
+                    <div className="flex space-x-4">
+                        <button
+                            className={`px-4 py-2 rounded ${
+                                selectedGraph === 'temperature' ? 'bg-green-500' : 'bg-[#121212]'
+                            }`}
+                            onClick={() => setSelectedGraph('temperature')}
+                        >
+                            Temperature
+                        </button>
+                        <button
+                            className={`px-4 py-2 rounded ${
+                                selectedGraph === 'humidity' ? 'bg-green-500' : 'bg-[#121212]'
+                            }`}
+                            onClick={() => setSelectedGraph('humidity')}
+                        >
+                            Humidity
+                        </button>
+                    </div>
                 </div>
 
                 {/* Conditionally Render Table or Graph */}
