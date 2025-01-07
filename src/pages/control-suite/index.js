@@ -67,7 +67,7 @@ export default function IoTDataPage() {
             <Navbar />
             <div className="container mx-auto mt-16 p-4">
                 {/* Summary Section */}
-                <div className="cursor-default mb-4 flex items-center text-white px-4 py-2 rounded-sm border border-gray-400 w-full">
+                <div className="cursor-default mb-4 flex items-center text-white px-4 py-2 rounded-sm border border-gray-400 w-fit">
                     <div className="flex-1 text-sm font-medium">
                         <div>
                             <span className="font-bold">Current Temperature:</span>{' '}
