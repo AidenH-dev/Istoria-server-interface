@@ -3,9 +3,20 @@ import Head from 'next/head';
 import Navbar from '../../components/Navbar';
 import { renderToString } from 'react-dom/server';
 import { CiServer } from 'react-icons/ci';
-import { RiArrowDropUpLine, RiArrowDropDownLine } from 'react-icons/ri';
-import { TbDots } from 'react-icons/tb';
 import { Line } from 'react-chartjs-2';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+
+// Register required components
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 export default function IoTDataPage() {
     const [data, setData] = useState([]);
