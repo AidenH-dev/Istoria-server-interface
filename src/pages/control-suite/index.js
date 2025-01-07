@@ -66,17 +66,18 @@ export default function IoTDataPage() {
             </Head>
             <Navbar />
             <div className="container mx-auto mt-16 p-4">
-                <div className="flex justify-between">
-                    <h1 className="text-2xl font-bold">IoT Data</h1>
-                    <input
-                        type="text"
-                        className="p-2 bg-[#121212] rounded text-white"
-                        placeholder="Search..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                </div>
+
                 <div className="flex mt-4">
+                    <div className="flex justify-between">
+                        <h1 className="text-2xl font-bold">IoT Data</h1>
+                        <input
+                            type="text"
+                            className="p-2 bg-[#121212] rounded text-white"
+                            placeholder="Search..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </div>
                     <div className="w-3/5 overflow-auto max-h-[400px] border border-gray-600 rounded p-2">
                         <table className="w-full text-sm text-left">
                             <thead className="bg-[#121212] text-gray-400">
