@@ -104,59 +104,57 @@ export default function IoTDataPage() {
                     <div className="w-2/5 ml-4">
                         <div className="flex justify-end mb-2">
                             <button
-                                className={`px-4 py-2 rounded ${
-                                    selectedGraph === 'temperature'
-                                        ? 'bg-green-500'
-                                        : 'bg-[#121212]'
-                                }`}
+                                className={`px-4 py-2 rounded ${selectedGraph === 'temperature' ? 'bg-green-500' : 'bg-[#121212]'
+                                    }`}
                                 onClick={() => setSelectedGraph('temperature')}
                             >
                                 Temperature
                             </button>
                             <button
-                                className={`px-4 py-2 rounded ml-2 ${
-                                    selectedGraph === 'humidity'
-                                        ? 'bg-green-500'
-                                        : 'bg-[#121212]'
-                                }`}
+                                className={`px-4 py-2 rounded ml-2 ${selectedGraph === 'humidity' ? 'bg-green-500' : 'bg-[#121212]'
+                                    }`}
                                 onClick={() => setSelectedGraph('humidity')}
                             >
                                 Humidity
                             </button>
                         </div>
-                        <Line
-                            data={graphData}
-                            options={{
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                scales: {
-                                    x: {
-                                        grid: {
-                                            color: '#444',
+                        {/* Add a container with Tailwind classes for fixed height */}
+                        <div className="h-96 w-full">
+                            <Line
+                                data={graphData}
+                                options={{
+                                    responsive: true,
+                                    maintainAspectRatio: true, // Keep aspect ratio within container bounds
+                                    scales: {
+                                        x: {
+                                            grid: {
+                                                color: '#444',
+                                            },
+                                            ticks: {
+                                                color: '#FFF',
+                                            },
                                         },
-                                        ticks: {
-                                            color: '#FFF',
-                                        },
-                                    },
-                                    y: {
-                                        grid: {
-                                            color: '#444',
-                                        },
-                                        ticks: {
-                                            color: '#FFF',
-                                        },
-                                    },
-                                },
-                                plugins: {
-                                    legend: {
-                                        labels: {
-                                            color: '#FFF',
+                                        y: {
+                                            grid: {
+                                                color: '#444',
+                                            },
+                                            ticks: {
+                                                color: '#FFF',
+                                            },
                                         },
                                     },
-                                },
-                            }}
-                        />
+                                    plugins: {
+                                        legend: {
+                                            labels: {
+                                                color: '#FFF',
+                                            },
+                                        },
+                                    },
+                                }}
+                            />
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
