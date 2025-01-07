@@ -32,7 +32,7 @@ export default function IoTDataPage() {
               <td>{row.temperature}</td>
               <td>{row.humidity}</td>
               <td>{row.timestamp}</td>
-              <td>{row.device}</td>
+              <td>{row.device_name}</td>
             </tr>
           ))}
         </tbody>
