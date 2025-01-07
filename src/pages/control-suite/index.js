@@ -101,11 +101,6 @@ export default function IoTDataPage() {
                             </tbody>
                         </table>
                     </div>
-
-                    Here's the updated graph container segment:
-
-                    jsx
-                    Copy code
                     <div className="w-2/5 ml-4">
                         <div className="flex justify-end mb-2">
                             <button
