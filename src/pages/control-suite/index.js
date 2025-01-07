@@ -66,7 +66,40 @@ export default function IoTDataPage() {
             </Head>
             <Navbar />
             <div className="container mx-auto mt-16 p-4">
-
+                {/* Summary Section */}
+                <div className="cursor-default mb-4 flex items-center text-white px-4 py-2 rounded-sm border border-gray-400 w-full">
+                    <div className="flex-1 text-sm font-medium">
+                        <div>
+                            <span className="font-bold">Current Temperature:</span>{' '}
+                            {data.length > 0
+                                ? `${data[data.length - 1].temperature}°C · ${data[data.length - 1].temperature > 25
+                                    ? 'Warm'
+                                    : data[data.length - 1].temperature < 10
+                                        ? 'Cold'
+                                        : 'Moderate'}`
+                                : 'N/A'}
+                        </div>
+                        <div>
+                            <span className="font-bold">Current Humidity:</span>{' '}
+                            {data.length > 0
+                                ? `${data[data.length - 1].humidity}% · ${data[data.length - 1].humidity > 60
+                                    ? 'High'
+                                    : data[data.length - 1].humidity < 30
+                                        ? 'Low'
+                                        : 'Normal'}`
+                                : 'N/A'}
+                        </div>
+                    </div>
+                    <div className="flex items-center">
+                        <div className="h-5 border-l border-white mx-2"></div>
+                        <div className="text-sm font-medium">
+                            <span className="font-bold">Last Updated:</span>{' '}
+                            {data.length > 0
+                                ? dayjs(data[data.length - 1].timestamp).format('hh:mm A')
+                                : 'N/A'}
+                        </div>
+                    </div>
+                </div>
                 <div className="flex mt-4">
                     <div className="w-3/5 border border-gray-600 rounded p-2">
                         {/* Title and Search Bar */}
