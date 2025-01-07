@@ -16,7 +16,6 @@ import {
 } from 'chart.js';
 import dayjs from 'dayjs';
 
-
 // Register required components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -24,6 +23,7 @@ export default function IoTDataPage() {
     const [data, setData] = useState([]);
     const [search, setSearch] = useState('');
     const [selectedGraph, setSelectedGraph] = useState('temperature'); // 'temperature' or 'humidity'
+    const [timeRange, setTimeRange] = useState('24h'); // Default range is 24 hours
 
     useEffect(() => {
         fetch('/api/iot-data')
@@ -32,14 +32,38 @@ export default function IoTDataPage() {
             .catch((error) => console.error('Error fetching IoT data:', error));
     }, []);
 
-    const filteredData = data.filter((row) =>
-        Object.values(row).some((value) =>
-            String(value).toLowerCase().includes(search.toLowerCase())
-        )
-    );
+    const now = dayjs();
+
+    let filteredData = data;
+
+    if (timeRange === '30m') {
+        filteredData = data.filter((row) =>
+            dayjs(row.timestamp).isAfter(now.subtract(30, 'minute'))
+        );
+    } else if (timeRange === '1h') {
+        filteredData = data.filter((row) =>
+            dayjs(row.timestamp).isAfter(now.subtract(1, 'hour'))
+        );
+    } else if (timeRange === '4h') {
+        filteredData = data.filter((row) =>
+            dayjs(row.timestamp).isAfter(now.subtract(4, 'hour'))
+        );
+    } else if (timeRange === '10h') {
+        filteredData = data.filter((row) =>
+            dayjs(row.timestamp).isAfter(now.subtract(10, 'hour'))
+        );
+    } else if (timeRange === '24h') {
+        filteredData = data.filter((row) =>
+            dayjs(row.timestamp).isAfter(now.subtract(24, 'hour'))
+        );
+    } else if (timeRange === 'ytd') {
+        filteredData = data.filter((row) =>
+            dayjs(row.timestamp).isAfter(dayjs().startOf('year'))
+        );
+    }
 
     const graphData = {
-        labels: filteredData.map((row) => row.timestamp),
+        labels: filteredData.map((row) => dayjs(row.timestamp).format('hh:mm A')),
         datasets: [
             {
                 label: selectedGraph === 'temperature' ? 'Temperature (°C)' : 'Humidity (%)',
@@ -72,21 +96,25 @@ export default function IoTDataPage() {
                         <div>
                             <span className="font-bold">Current Temperature:</span>{' '}
                             {data.length > 0
-                                ? `${data[data.length - 1].temperature}°C · ${data[data.length - 1].temperature > 25
-                                    ? 'Warm'
-                                    : data[data.length - 1].temperature < 10
-                                        ? 'Cold'
-                                        : 'Moderate'}`
+                                ? `${data[data.length - 1].temperature}°C · ${
+                                      data[data.length - 1].temperature > 25
+                                          ? 'Warm'
+                                          : data[data.length - 1].temperature < 10
+                                          ? 'Cold'
+                                          : 'Moderate'
+                                  }`
                                 : 'N/A'}
                         </div>
                         <div>
                             <span className="font-bold">Current Humidity:</span>{' '}
                             {data.length > 0
-                                ? `${data[data.length - 1].humidity}% · ${data[data.length - 1].humidity > 60
-                                    ? 'High'
-                                    : data[data.length - 1].humidity < 30
-                                        ? 'Low'
-                                        : 'Normal'}`
+                                ? `${data[data.length - 1].humidity}% · ${
+                                      data[data.length - 1].humidity > 60
+                                          ? 'High'
+                                          : data[data.length - 1].humidity < 30
+                                          ? 'Low'
+                                          : 'Normal'
+                                  }`
                                 : 'N/A'}
                         </div>
                     </div>
@@ -100,105 +128,66 @@ export default function IoTDataPage() {
                         </div>
                     </div>
                 </div>
+
+                {/* Time Range Selector */}
+                <div className="flex justify-center space-x-4 mb-4">
+                    {['30m', '1h', '4h', '10h', '24h', 'ytd'].map((range) => (
+                        <button
+                            key={range}
+                            onClick={() => setTimeRange(range)}
+                            className={`px-4 py-2 rounded ${
+                                timeRange === range ? 'bg-green-500' : 'bg-[#121212]'
+                            }`}
+                        >
+                            {range.toUpperCase()}
+                        </button>
+                    ))}
+                </div>
+
                 <div className="flex mt-4">
-                    <div className="w-3/5 border border-gray-600 rounded p-2">
-                        {/* Title and Search Bar */}
-                        <div className="flex justify-between mb-2">
-                            <h1 className="text-2xl font-bold">IoT Data</h1>
-                            <input
-                                type="text"
-                                className="p-2 bg-[#121212] rounded text-white"
-                                placeholder="Search..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
-                        </div>
-
-                        {/* Table with Fixed Header */}
-                        <table className="w-full text-sm text-left">
-                            <thead className="sticky top-0 bg-[#121212] text-gray-400">
-                                {/* Table Headers */}
-                                <tr>
-                                    <th className="py-2 px-4">ID</th>
-                                    <th className="py-2 px-4">Temperature</th>
-                                    <th className="py-2 px-4">Humidity</th>
-                                    <th className="py-2 px-4">Timestamp</th>
-                                    <th className="py-2 px-4">Device</th>
-                                </tr>
-                            </thead>
-                        </table>
-
-                        {/* Scrollable Data List */}
-                        <div className="max-h-[350px] overflow-auto">
-                            <table className="w-full text-sm text-left">
-                                <tbody>
-                                    {filteredData
-                                        .filter((row) =>
-                                            Object.values(row)
-                                                .join(' ')
-                                                .toLowerCase()
-                                                .includes(search.toLowerCase())
-                                        ) // Search functionality
-                                        .sort((a, b) => b.id - a.id) // Descending order by ID
-                                        .map((row) => (
-                                            <tr key={row.id} className="border-t border-gray-600">
-                                                <td className="py-2 px-4">{row.id}</td>
-                                                <td className="py-2 px-4">{row.temperature}</td>
-                                                <td className="py-2 px-4">{row.humidity}</td>
-                                                <td className="py-2 px-4">
-                                                    {dayjs(row.timestamp).format('MM/DD/YYYY, hh:mm A')}
-                                                </td>
-                                                <td className="py-2 px-4">{row.device_name}</td>
-                                            </tr>
-                                        ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-
-                    <div className="w-2/5 ml-4">
+                    {/* Graph Section */}
+                    <div className="w-full">
                         <div className="flex justify-end mb-2">
                             <button
-                                className={`px-4 py-2 rounded ${selectedGraph === 'temperature' ? 'bg-green-500' : 'bg-[#121212]'
-                                    }`}
+                                className={`px-4 py-2 rounded ${
+                                    selectedGraph === 'temperature'
+                                        ? 'bg-green-500'
+                                        : 'bg-[#121212]'
+                                }`}
                                 onClick={() => setSelectedGraph('temperature')}
                             >
                                 Temperature
                             </button>
                             <button
-                                className={`px-4 py-2 rounded ml-2 ${selectedGraph === 'humidity' ? 'bg-green-500' : 'bg-[#121212]'
-                                    }`}
+                                className={`px-4 py-2 rounded ml-2 ${
+                                    selectedGraph === 'humidity'
+                                        ? 'bg-green-500'
+                                        : 'bg-[#121212]'
+                                }`}
                                 onClick={() => setSelectedGraph('humidity')}
                             >
                                 Humidity
                             </button>
                         </div>
-                        {/* Add a container limited to its parent's height */}
+                        {/* Graph */}
                         <div className="h-[400px] w-full">
                             <Line
                                 data={graphData}
                                 options={{
                                     responsive: true,
-                                    maintainAspectRatio: false, // Allow chart to fill container height
+                                    maintainAspectRatio: false,
                                     elements: {
                                         point: {
-                                            radius: 1, // Small point size for data points
+                                            radius: 1,
                                         },
                                     },
                                     scales: {
                                         x: {
-                                            type: 'category',
-                                            ticks: {
-                                                callback: function (value, index, values) {
-                                                    // Format timestamps using dayjs
-                                                    const rawTimestamp = graphData.labels[index];
-                                                    return dayjs(rawTimestamp).format('MM/DD/YYYY, hh:mm A');
-                                                },
-                                                color: '#FFF',
-                                            },
                                             grid: {
                                                 color: '#444',
+                                            },
+                                            ticks: {
+                                                color: '#FFF',
                                             },
                                         },
                                         y: {
@@ -208,8 +197,6 @@ export default function IoTDataPage() {
                                             ticks: {
                                                 color: '#FFF',
                                             },
-                                            suggestedMin: Math.min(...graphData.datasets[0].data) - 5, // Add padding below the minimum value
-                                            suggestedMax: Math.max(...graphData.datasets[0].data) + 5, // Optional: Add padding above the maximum value
                                         },
                                     },
                                     plugins: {
@@ -222,10 +209,7 @@ export default function IoTDataPage() {
                                 }}
                             />
                         </div>
-
-
                     </div>
-
                 </div>
             </div>
         </div>
