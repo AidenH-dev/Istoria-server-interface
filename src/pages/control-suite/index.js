@@ -121,12 +121,12 @@ export default function IoTDataPage() {
                             </button>
                         </div>
                         {/* Add a container limited to its parent's height */}
-                        <div className="h-1/2 w-full">
+                        <div className="h-[400px] w-full"> {/* Use a fixed height for testing */}
                             <Line
                                 data={graphData}
                                 options={{
                                     responsive: true,
-                                    maintainAspectRatio: false, // Ensure it fits the container's height
+                                    maintainAspectRatio: false, // Allow chart to fill container height
                                     elements: {
                                         point: {
                                             radius: 2, // Small point size for data points
@@ -166,6 +166,7 @@ export default function IoTDataPage() {
                                 }}
                             />
                         </div>
+
                     </div>
 
                 </div>
