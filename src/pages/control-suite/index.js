@@ -14,6 +14,8 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+import dayjs from 'dayjs';
+
 
 // Register required components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
