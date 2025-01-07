@@ -94,7 +94,7 @@ export default function IoTDataPage() {
                 {/* Summary Section */}
                 <div className="cursor-default mb-4 flex items-center text-white px-6 py-3 rounded-lg border border-gray-400 w-fit shadow-md bg-[#121212]">
                     <div className="flex flex-col text-sm font-medium">
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-1">
                             <span className="font-bold">Current Conditions:</span>
                             {data.length > 0 ? (
                                 <span>
