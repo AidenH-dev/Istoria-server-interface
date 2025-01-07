@@ -121,7 +121,7 @@ export default function IoTDataPage() {
                             </button>
                         </div>
                         {/* Add a container limited to its parent's height */}
-                        <div className="h-full w-full">
+                        <div className="h-300 w-full">
                             <Line
                                 data={graphData}
                                 options={{
