@@ -91,7 +91,7 @@ export default function IoTDataPage() {
                         </div>
                     </div>
                     <div className="flex items-center">
-                        <div className="h-5 border-l border-white mx-2"></div>
+                        <div className="h-10 border-l border-white mx-2"></div>
                         <div className="text-sm font-medium">
                             <span className="font-bold">Last Updated:</span>{' '}
                             {data.length > 0
