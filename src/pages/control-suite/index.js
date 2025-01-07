@@ -92,7 +92,7 @@ export default function IoTDataPage() {
             <Navbar />
             <div className="container mx-auto mt-16 p-4">
                 {/* Summary Section */}
-                <div className="cursor-default mb-4 flex items-center text-white px-3 py-3 rounded-lg border border-gray-400 w-fit shadow-md bg-[#121212]">
+                <div className="cursor-default mb-4 flex items-center text-white px-6 py-3 rounded-lg border border-gray-400 w-fit shadow-md bg-[#121212]">
                     <div className="flex flex-col text-sm font-medium">
                         <div className="flex items-center space-x-1">
                             <span className="font-bold">Current Conditions:</span>
@@ -115,8 +115,8 @@ export default function IoTDataPage() {
                             )}
                         </div>
                     </div>
-                    <div className="flex items-center ml-2">
-                        <div className="h-8 border-l border-white mx-4"></div>
+                    <div className="flex items-center ml-1">
+                        <div className="h-8 border-l border-white mx-2"></div>
                         <div className="text-sm font-medium">
                             <span className="font-bold">Last Updated:</span>{' '}
                             {data.length > 0
