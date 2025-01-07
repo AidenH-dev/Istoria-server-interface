@@ -24,6 +24,7 @@ export default function IoTDataPage() {
     const [search, setSearch] = useState('');
     const [selectedGraph, setSelectedGraph] = useState('temperature'); // 'temperature' or 'humidity'
     const [timeRange, setTimeRange] = useState('24h'); // Default range is 24 hours
+    const [isTableView, setIsTableView] = useState(true); // Toggle between table and graph view
 
     useEffect(() => {
         fetch('/api/iot-data')
@@ -129,47 +130,81 @@ export default function IoTDataPage() {
                     </div>
                 </div>
 
-                {/* Time Range Selector */}
-                <div className="flex justify-center space-x-4 mb-4">
-                    {['30m', '1h', '4h', '10h', '24h', 'ytd'].map((range) => (
-                        <button
-                            key={range}
-                            onClick={() => setTimeRange(range)}
-                            className={`px-4 py-2 rounded ${
-                                timeRange === range ? 'bg-green-500' : 'bg-[#121212]'
-                            }`}
-                        >
-                            {range.toUpperCase()}
-                        </button>
-                    ))}
+                {/* View Toggle */}
+                <div className="flex justify-end mb-4">
+                    <button
+                        onClick={() => setIsTableView(!isTableView)}
+                        className="px-4 py-2 bg-green-500 rounded"
+                    >
+                        Switch to {isTableView ? 'Graph View' : 'Table View'}
+                    </button>
                 </div>
 
-                <div className="flex mt-4">
-                    {/* Graph Section */}
-                    <div className="w-full">
-                        <div className="flex justify-end mb-2">
-                            <button
-                                className={`px-4 py-2 rounded ${
-                                    selectedGraph === 'temperature'
-                                        ? 'bg-green-500'
-                                        : 'bg-[#121212]'
-                                }`}
-                                onClick={() => setSelectedGraph('temperature')}
-                            >
-                                Temperature
-                            </button>
-                            <button
-                                className={`px-4 py-2 rounded ml-2 ${
-                                    selectedGraph === 'humidity'
-                                        ? 'bg-green-500'
-                                        : 'bg-[#121212]'
-                                }`}
-                                onClick={() => setSelectedGraph('humidity')}
-                            >
-                                Humidity
-                            </button>
+                {/* Conditionally Render Table or Graph */}
+                {isTableView ? (
+                    <div className="w-full border border-gray-600 rounded p-4">
+                        {/* Table View */}
+                        <div className="flex justify-between mb-2">
+                            <h1 className="text-2xl font-bold">IoT Data</h1>
+                            <input
+                                type="text"
+                                className="p-2 bg-[#121212] rounded text-white"
+                                placeholder="Search..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
                         </div>
-                        {/* Graph */}
+                        <div className="max-h-[400px] overflow-auto">
+                            <table className="w-full text-sm text-left">
+                                <thead className="sticky top-0 bg-[#121212] text-gray-400">
+                                    <tr>
+                                        <th className="py-2 px-4">ID</th>
+                                        <th className="py-2 px-4">Temperature</th>
+                                        <th className="py-2 px-4">Humidity</th>
+                                        <th className="py-2 px-4">Timestamp</th>
+                                        <th className="py-2 px-4">Device</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredData
+                                        .filter((row) =>
+                                            Object.values(row)
+                                                .join(' ')
+                                                .toLowerCase()
+                                                .includes(search.toLowerCase())
+                                        )
+                                        .sort((a, b) => b.id - a.id)
+                                        .map((row) => (
+                                            <tr key={row.id} className="border-t border-gray-600">
+                                                <td className="py-2 px-4">{row.id}</td>
+                                                <td className="py-2 px-4">{row.temperature}</td>
+                                                <td className="py-2 px-4">{row.humidity}</td>
+                                                <td className="py-2 px-4">
+                                                    {dayjs(row.timestamp).format('MM/DD/YYYY, hh:mm A')}
+                                                </td>
+                                                <td className="py-2 px-4">{row.device_name}</td>
+                                            </tr>
+                                        ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="w-full">
+                        {/* Graph View */}
+                        <div className="flex justify-center space-x-4 mb-4">
+                            {['30m', '1h', '4h', '10h', '24h', 'ytd'].map((range) => (
+                                <button
+                                    key={range}
+                                    onClick={() => setTimeRange(range)}
+                                    className={`px-4 py-2 rounded ${
+                                        timeRange === range ? 'bg-green-500' : 'bg-[#121212]'
+                                    }`}
+                                >
+                                    {range.toUpperCase()}
+                                </button>
+                            ))}
+                        </div>
                         <div className="h-[400px] w-full">
                             <Line
                                 data={graphData}
@@ -210,7 +245,7 @@ export default function IoTDataPage() {
                             />
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );
