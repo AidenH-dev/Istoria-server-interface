@@ -69,7 +69,7 @@ export default function IoTDataPage() {
 
                 <div className="flex mt-4">
                     <div className="w-3/5 overflow-auto max-h-[400px] border border-gray-600 rounded p-2">
-                        <div className="flex justify-between">
+                        <div className="flex justify-between mb-4">
                             <h1 className="text-2xl font-bold">IoT Data</h1>
                             <input
                                 type="text"
@@ -90,18 +90,27 @@ export default function IoTDataPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredData.map((row) => (
-                                    <tr key={row.id} className="border-t border-gray-600">
-                                        <td className="py-2 px-4">{row.id}</td>
-                                        <td className="py-2 px-4">{row.temperature}</td>
-                                        <td className="py-2 px-4">{row.humidity}</td>
-                                        <td className="py-2 px-4">{row.timestamp}</td>
-                                        <td className="py-2 px-4">{row.device_name}</td>
-                                    </tr>
-                                ))}
+                                {filteredData
+                                    .filter((row) =>
+                                        Object.values(row)
+                                            .join(' ')
+                                            .toLowerCase()
+                                            .includes(search.toLowerCase())
+                                    ) // Search functionality
+                                    .sort((a, b) => b.id - a.id) // Descending order by ID
+                                    .map((row) => (
+                                        <tr key={row.id} className="border-t border-gray-600">
+                                            <td className="py-2 px-4">{row.id}</td>
+                                            <td className="py-2 px-4">{row.temperature}</td>
+                                            <td className="py-2 px-4">{row.humidity}</td>
+                                            <td className="py-2 px-4">{row.timestamp}</td>
+                                            <td className="py-2 px-4">{row.device_name}</td>
+                                        </tr>
+                                    ))}
                             </tbody>
                         </table>
                     </div>
+
                     <div className="w-2/5 ml-4">
                         <div className="flex justify-end mb-2">
                             <button
