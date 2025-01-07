@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import Head from 'next/head';
-import Navbar from '../components/Navbar';
+import Navbar from '../../components/Navbar';
 import { renderToString } from 'react-dom/server';
 import { CiServer } from 'react-icons/ci';
 import { BiNetworkChart } from 'react-icons/bi';
