@@ -96,7 +96,7 @@ export default function IoTDataPage() {
                         </table>
 
                         {/* Scrollable Data List */}
-                        <div className="max-h-[300px] overflow-auto">
+                        <div className="max-h-[350px] overflow-auto">
                             <table className="w-full text-sm text-left">
                                 <tbody>
                                     {filteredData
