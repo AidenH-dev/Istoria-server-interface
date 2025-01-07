@@ -120,7 +120,7 @@ export default function IoTDataPage() {
                             </button>
                         </div>
                         {/* Add a container limited to its parent's height */}
-                        <div className="h-[400px] w-full"> {/* Use a fixed height for testing */}
+                        <div className="h-[400px] w-full">
                             <Line
                                 data={graphData}
                                 options={{
@@ -128,7 +128,7 @@ export default function IoTDataPage() {
                                     maintainAspectRatio: false, // Allow chart to fill container height
                                     elements: {
                                         point: {
-                                            radius: 2, // Small point size for data points
+                                            radius: 1, // Small point size for data points
                                         },
                                     },
                                     scales: {
@@ -153,6 +153,8 @@ export default function IoTDataPage() {
                                             ticks: {
                                                 color: '#FFF',
                                             },
+                                            suggestedMin: Math.min(...graphData.datasets[0].data) - 5, // Add padding below the minimum value
+                                            suggestedMax: Math.max(...graphData.datasets[0].data) + 5, // Optional: Add padding above the maximum value
                                         },
                                     },
                                     plugins: {
@@ -165,6 +167,7 @@ export default function IoTDataPage() {
                                 }}
                             />
                         </div>
+
 
                     </div>
 
