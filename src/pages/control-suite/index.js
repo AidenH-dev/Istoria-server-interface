@@ -68,8 +68,9 @@ export default function IoTDataPage() {
             <div className="container mx-auto mt-16 p-4">
 
                 <div className="flex mt-4">
-                    <div className="w-3/5 overflow-auto max-h-[400px] border border-gray-600 rounded p-2">
-                        <div className="flex justify-between mb-4">
+                    <div className="w-3/5 border border-gray-600 rounded p-2">
+                        {/* Title and Search Bar */}
+                        <div className="flex justify-between mb-2">
                             <h1 className="text-2xl font-bold">IoT Data</h1>
                             <input
                                 type="text"
@@ -79,8 +80,11 @@ export default function IoTDataPage() {
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                         </div>
+
+                        {/* Table with Fixed Header */}
                         <table className="w-full text-sm text-left">
-                            <thead className="bg-[#121212] text-gray-400">
+                            <thead className="sticky top-0 bg-[#121212] text-gray-400">
+                                {/* Table Headers */}
                                 <tr>
                                     <th className="py-2 px-4">ID</th>
                                     <th className="py-2 px-4">Temperature</th>
@@ -89,27 +93,34 @@ export default function IoTDataPage() {
                                     <th className="py-2 px-4">Device</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {filteredData
-                                    .filter((row) =>
-                                        Object.values(row)
-                                            .join(' ')
-                                            .toLowerCase()
-                                            .includes(search.toLowerCase())
-                                    ) // Search functionality
-                                    .sort((a, b) => b.id - a.id) // Descending order by ID
-                                    .map((row) => (
-                                        <tr key={row.id} className="border-t border-gray-600">
-                                            <td className="py-2 px-4">{row.id}</td>
-                                            <td className="py-2 px-4">{row.temperature}</td>
-                                            <td className="py-2 px-4">{row.humidity}</td>
-                                            <td className="py-2 px-4">{row.timestamp}</td>
-                                            <td className="py-2 px-4">{row.device_name}</td>
-                                        </tr>
-                                    ))}
-                            </tbody>
                         </table>
+
+                        {/* Scrollable Data List */}
+                        <div className="max-h-[300px] overflow-auto">
+                            <table className="w-full text-sm text-left">
+                                <tbody>
+                                    {filteredData
+                                        .filter((row) =>
+                                            Object.values(row)
+                                                .join(' ')
+                                                .toLowerCase()
+                                                .includes(search.toLowerCase())
+                                        ) // Search functionality
+                                        .sort((a, b) => b.id - a.id) // Descending order by ID
+                                        .map((row) => (
+                                            <tr key={row.id} className="border-t border-gray-600">
+                                                <td className="py-2 px-4">{row.id}</td>
+                                                <td className="py-2 px-4">{row.temperature}</td>
+                                                <td className="py-2 px-4">{row.humidity}</td>
+                                                <td className="py-2 px-4">{row.timestamp}</td>
+                                                <td className="py-2 px-4">{row.device_name}</td>
+                                            </tr>
+                                        ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
 
                     <div className="w-2/5 ml-4">
                         <div className="flex justify-end mb-2">
