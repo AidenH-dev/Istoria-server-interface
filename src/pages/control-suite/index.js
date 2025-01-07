@@ -92,33 +92,31 @@ export default function IoTDataPage() {
             <Navbar />
             <div className="container mx-auto mt-16 p-4">
                 {/* Summary Section */}
-                <div className="cursor-default mb-4 flex items-center text-white px-4 py-2 rounded-sm border border-gray-400 w-fit">
-                    <div className="flex-1 text-sm font-medium">
-                        <div>
-                            <span className="font-bold">Current Temperature:</span>{' '}
-                            {data.length > 0
-                                ? `${data[data.length - 1].temperature}°C · ${data[data.length - 1].temperature > 25
-                                    ? 'Warm'
-                                    : data[data.length - 1].temperature < 10
-                                        ? 'Cold'
-                                        : 'Moderate'
-                                }`
-                                : 'N/A'}
-                        </div>
-                        <div>
-                            <span className="font-bold">Current Humidity:</span>{' '}
-                            {data.length > 0
-                                ? `${data[data.length - 1].humidity}% · ${data[data.length - 1].humidity > 60
-                                    ? 'High'
-                                    : data[data.length - 1].humidity < 30
-                                        ? 'Low'
-                                        : 'Normal'
-                                }`
-                                : 'N/A'}
+                <div className="cursor-default mb-4 flex items-center text-white px-6 py-3 rounded-lg border border-gray-400 w-fit shadow-md bg-[#121212]">
+                    <div className="flex flex-col text-sm font-medium">
+                        <div className="flex items-center space-x-4">
+                            <span className="font-bold">Current Conditions:</span>
+                            {data.length > 0 ? (
+                                <span>
+                                    {`${data[data.length - 1].temperature}°C ${data[data.length - 1].temperature > 25
+                                            ? '(Warm)'
+                                            : data[data.length - 1].temperature < 10
+                                                ? '(Cold)'
+                                                : '(Moderate)'
+                                        } · ${data[data.length - 1].humidity}% ${data[data.length - 1].humidity > 60
+                                            ? '(High Humidity)'
+                                            : data[data.length - 1].humidity < 30
+                                                ? '(Low Humidity)'
+                                                : '(Normal Humidity)'
+                                        }`}
+                                </span>
+                            ) : (
+                                'N/A'
+                            )}
                         </div>
                     </div>
-                    <div className="flex items-center">
-                        <div className="h-10 border-l border-white mx-2"></div>
+                    <div className="flex items-center ml-6">
+                        <div className="h-8 border-l border-white mx-4"></div>
                         <div className="text-sm font-medium">
                             <span className="font-bold">Last Updated:</span>{' '}
                             {data.length > 0
@@ -127,6 +125,7 @@ export default function IoTDataPage() {
                         </div>
                     </div>
                 </div>
+
 
                 {/* View Toggle */}
                 <div className="flex justify-between mb-4">
