@@ -68,22 +68,21 @@ export default function IoTDataPage() {
             <div className="container mx-auto mt-16 p-4">
 
                 <div className="flex mt-4">
-                    <div className="flex justify-between">
-                        <h1 className="text-2xl font-bold">IoT Data</h1>
-                        <input
-                            type="text"
-                            className="p-2 bg-[#121212] rounded text-white"
-                            placeholder="Search..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
-                    </div>
                     <div className="w-3/5 overflow-auto max-h-[400px] border border-gray-600 rounded p-2">
+                        <div className="flex justify-between">
+                            <h1 className="text-2xl font-bold">IoT Data</h1>
+                            <input
+                                type="text"
+                                className="p-2 bg-[#121212] rounded text-white"
+                                placeholder="Search..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
+                        </div>
                         <table className="w-full text-sm text-left">
                             <thead className="bg-[#121212] text-gray-400">
                                 <tr>
                                     <th className="py-2 px-4">ID</th>
-                                    <th className="py-2 px-4">UUID</th>
                                     <th className="py-2 px-4">Temperature</th>
                                     <th className="py-2 px-4">Humidity</th>
                                     <th className="py-2 px-4">Timestamp</th>
@@ -94,7 +93,6 @@ export default function IoTDataPage() {
                                 {filteredData.map((row) => (
                                     <tr key={row.id} className="border-t border-gray-600">
                                         <td className="py-2 px-4">{row.id}</td>
-                                        <td className="py-2 px-4">{row.uuid}</td>
                                         <td className="py-2 px-4">{row.temperature}</td>
                                         <td className="py-2 px-4">{row.humidity}</td>
                                         <td className="py-2 px-4">{row.timestamp}</td>
