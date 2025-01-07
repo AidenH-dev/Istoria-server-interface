@@ -98,12 +98,12 @@ export default function IoTDataPage() {
                             <span className="font-bold">Current Conditions:</span>
                             {data.length > 0 ? (
                                 <span>
-                                    {`${data[data.length - 1].temperature}°C ${data[data.length - 1].temperature > 25
+                                    {`${data[data.length - 1].temperature.toFixed(2)}°C ${data[data.length - 1].temperature > 25
                                             ? '(Warm)'
                                             : data[data.length - 1].temperature < 10
                                                 ? '(Cold)'
                                                 : '(Moderate)'
-                                        } · ${data[data.length - 1].humidity}% ${data[data.length - 1].humidity > 60
+                                        } · ${data[data.length - 1].humidity.toFixed(1)}% ${data[data.length - 1].humidity > 60
                                             ? '(High Humidity)'
                                             : data[data.length - 1].humidity < 30
                                                 ? '(Low Humidity)'
@@ -125,6 +125,7 @@ export default function IoTDataPage() {
                         </div>
                     </div>
                 </div>
+
 
 
                 {/* View Toggle */}
