@@ -26,11 +26,24 @@ export default function IoTDataPage() {
     const [timeRange, setTimeRange] = useState('24h'); // Default range is 24 hours
     const [isTableView, setIsTableView] = useState(true); // Toggle between table and graph view
 
-    useEffect(() => {
+    const fetchData = () => {
         fetch('/api/iot-data')
             .then((response) => response.json())
             .then((data) => setData(data))
             .catch((error) => console.error('Error fetching IoT data:', error));
+    };
+
+    useEffect(() => {
+        // Fetch data initially
+        fetchData();
+
+        // Set up interval to fetch data every 60 seconds
+        const interval = setInterval(() => {
+            fetchData();
+        }, 60000);
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(interval);
     }, []);
 
     const now = dayjs();
@@ -98,17 +111,19 @@ export default function IoTDataPage() {
                             <span className="font-bold">Current Conditions:</span>
                             {data.length > 0 ? (
                                 <span>
-                                    {`${data[data.length - 1].temperature.toFixed(2)}°C ${data[data.length - 1].temperature > 25
+                                    {`${data[data.length - 1].temperature.toFixed(2)}°C ${
+                                        data[data.length - 1].temperature > 25
                                             ? '(Warm)'
                                             : data[data.length - 1].temperature < 10
-                                                ? '(Cold)'
-                                                : '(Moderate)'
-                                        } · ${data[data.length - 1].humidity.toFixed(1)}% ${data[data.length - 1].humidity > 60
+                                            ? '(Cold)'
+                                            : '(Moderate)'
+                                    } · ${data[data.length - 1].humidity.toFixed(1)}% ${
+                                        data[data.length - 1].humidity > 60
                                             ? '(High Humidity)'
                                             : data[data.length - 1].humidity < 30
-                                                ? '(Low Humidity)'
-                                                : '(Normal Humidity)'
-                                        }`}
+                                            ? '(Low Humidity)'
+                                            : '(Normal Humidity)'
+                                    }`}
                                 </span>
                             ) : (
                                 'N/A'
@@ -126,8 +141,6 @@ export default function IoTDataPage() {
                     </div>
                 </div>
 
-
-
                 {/* View Toggle */}
                 <div className="flex justify-between mb-4">
                     <button
@@ -141,15 +154,17 @@ export default function IoTDataPage() {
                     {!isTableView && (
                         <div className="flex space-x-4">
                             <button
-                                className={`px-4 py-2 rounded ${selectedGraph === 'temperature' ? 'bg-green-500' : 'bg-[#121212]'
-                                    }`}
+                                className={`px-4 py-2 rounded ${
+                                    selectedGraph === 'temperature' ? 'bg-green-500' : 'bg-[#121212]'
+                                }`}
                                 onClick={() => setSelectedGraph('temperature')}
                             >
                                 Temperature
                             </button>
                             <button
-                                className={`px-4 py-2 rounded ${selectedGraph === 'humidity' ? 'bg-green-500' : 'bg-[#121212]'
-                                    }`}
+                                className={`px-4 py-2 rounded ${
+                                    selectedGraph === 'humidity' ? 'bg-green-500' : 'bg-[#121212]'
+                                }`}
                                 onClick={() => setSelectedGraph('humidity')}
                             >
                                 Humidity
@@ -157,7 +172,6 @@ export default function IoTDataPage() {
                         </div>
                     )}
                 </div>
-
 
                 {/* Conditionally Render Table or Graph */}
                 {isTableView ? (
@@ -216,8 +230,9 @@ export default function IoTDataPage() {
                                 <button
                                     key={range}
                                     onClick={() => setTimeRange(range)}
-                                    className={`px-4 py-2 rounded ${timeRange === range ? 'bg-green-500' : 'bg-[#121212]'
-                                        }`}
+                                    className={`px-4 py-2 rounded ${
+                                        timeRange === range ? 'bg-green-500' : 'bg-[#121212]'
+                                    }`}
                                 >
                                     {range.toUpperCase()}
                                 </button>
